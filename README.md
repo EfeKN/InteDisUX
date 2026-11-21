@@ -267,9 +267,84 @@ This process continues until no suitable candidate merge remains.
 
 Consequently, the number of segments in the final explanation is determined by the iterative refinement process rather than being fixed beforehand.
 
-## 2.2. My interpretation 
+## 2.2. Our interpretation 
 
-Explain the parts that were not clearly explained in the original paper and how you interpreted them.
+Although the paper describes the overall workflow of InteDisUX, some aspects of the proposed method require further interpretation to understand how the individual components work together. In this section, we explain our understanding of these aspects.
+
+### 2.2.1. Why does the algorithm use Faithfulness Gain in addition to Discrimination Gain?
+
+Discrimination Gain alone is insufficient to determine whether a segmentation provides a good explanation of the model's prediction.
+
+A segmentation might produce clearly distinguishable temporal patterns without necessarily identifying the parts of the input that the classification model actually relies on.
+
+This is why the authors introduce Faithfulness Gain.
+
+Unlike Discrimination Gain, which evaluates relationships between segments, Faithfulness Gain directly uses the classification model to evaluate the quality of an explanation.
+
+An important detail is how the authors measure faithfulness. Instead of simply removing or replacing an important segment, they reverse its temporal order.
+
+For example, consider a segment:
+
+$$
+s=(x_1,x_2,x_3,x_4)
+$$
+
+Its reversed version becomes:
+
+$$
+s'=(x_4,x_3,x_2,x_1)
+$$
+
+The values remain unchanged, but their temporal order is modified.
+
+The original and modified time series are then passed through the classification model. The reduction in confidence for the ground-truth class is used to measure faithfulness.
+
+The intuition is that if a segment is important to the model's prediction, changing its temporal structure should affect the model's confidence in the corresponding class.
+
+Faithfulness Gain evaluates whether a candidate merge improves this faithfulness score compared to the current explanation.
+
+This distinction is important: Discrimination Gain evaluates the structure of the segmentation, whereas Faithfulness Gain evaluates its relationship with the model's prediction.
+
+### 2.2.2. How does the greedy selection strategy combine the two metrics?
+
+The paper introduces two metrics, but their roles in the selection process are not identical.
+
+For each iteration, the algorithm generates all possible segmentations obtained by merging two consecutive segments. Each candidate is evaluated using Discrimination Gain and Faithfulness Gain.
+
+The selection process follows two conditions:
+
+1. Both Discrimination Gain and Faithfulness Gain must be non-negative.
+2. Among the candidates satisfying these conditions, the algorithm selects the one with the highest Discrimination Gain.
+
+This means that Faithfulness Gain acts as a constraint that prevents the algorithm from accepting merges that reduce explanation faithfulness. Meanwhile, Discrimination Gain determines which of the remaining candidates is preferred.
+
+After selecting a candidate, the resulting segmentation becomes the baseline for the next iteration.
+
+The process continues until no candidate merge satisfies both conditions.
+
+One important observation is that this is a greedy optimization strategy. The algorithm makes the best available decision at each iteration rather than exploring every possible segmentation. Therefore, the resulting segmentation should be understood as the outcome of this particular iterative strategy, rather than necessarily the globally optimal segmentation.
+
+### 2.2.3. How are importance scores maintained after merging segments?
+
+Another important aspect is the relationship between SIG and the iterative merging process.
+
+Initially, each segment receives an importance score calculated using Segment-level Integrated Gradients:
+
+$$
+SIG(s)=\sum_{t=t_{\mathrm{low}}}^{t_{\mathrm{high}}}IG_t(x)
+$$
+
+When two segments are merged, their importance scores can simply be added:
+
+$$
+SIG(s_i\cup s_{i+1})
+=
+SIG(s_i)+SIG(s_{i+1})
+$$
+
+This follows from the additive property of Integrated Gradients.
+
+Consequently, the algorithm does not need to calculate Integrated Gradients again after every merge. It can reuse the scores calculated during initialization.
 
 # 3. Experiments and results
 
