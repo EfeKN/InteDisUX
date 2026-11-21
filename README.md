@@ -60,16 +60,212 @@ They introduce SIG for scoring segments, and they show theoretically that it sat
 
 The authors evaluate the method on 12 UCR datasets with 5 DL architectures (CNN, Transformer, FC, Dense-FCN, and LSTM-FCN). InteDisUX achieves higher faithfulness than all three LIME-based baselines on all 12 datasets and higher robustness than LIMESegment on 8 of the 12 datasets. Their ablation studies show that:
 - SIG mainly improves faithfulness;
-- the discrimination gain mainly improves robustness;
-- the faithfulness gain further improves faithfulness without reducing robustness.
+- The discrimination gain mainly improves robustness;
+- The faithfulness gain further improves faithfulness without reducing robustness.
 
 # 2. The method and our interpretation
 
-Feel free to add more subsections and change subtitles as necessary.
+InteDisUX consists of two main stages:
+
+1. **Initialization**
+2. **Iterative Refinement**
+
+The overall workflow is as follows:
+
+![The overall process of InteDisUX](res/InteDisUX_process.png)
+
+The input to the algorithm consists of:
+- A time series instance $x$.
+- A trained deep learning classification model $F$.
+- An initial number of segments $N_s$.
+
+The output consists of:
+- A set of non-overlapping segments $S$.
+- An importance score $i_k$ associated with each segment $s_k$.
+
+Formally:
+
+$$
+S=\\{s_k\mid 1\leq k\leq n\\}
+$$
+
+$$
+I=\\{i_k\mid 1\leq k\leq n\\}
+$$
+
+where $n$ is the number of segments in the final explanation.
 
 ## 2.1. The original method
 
-Explain the original method.
+### 2.1.1. Stage 1: Initialization
+
+The first stage divides the input time series into $N_s$ equally sized segments.
+
+Given a time series:
+
+$$
+x=(x_1,x_2,\ldots,x_T)
+$$
+
+the initial segmentation consists of:
+
+$$
+S=\\{s_1,s_2,\ldots,s_{N_s}\\}
+$$
+
+Each segment initially contains approximately:
+
+$$
+\frac{T}{N_s}
+$$
+
+consecutive time points.
+
+The method then calculates the importance score of each segment using Segment-level Integrated Gradients (SIG).
+
+**Integrated Gradients (IG)**
+
+Integrated Gradients is an attribution technique that measures the contribution of individual input features to a model's prediction.
+
+For an input $x$ and a baseline $x'$, the attribution of feature $j$ is calculated as:
+
+$$
+IG_j(x)=
+(x_j-x'_j)
+\int_0^1
+\frac{\partial F(x'+\alpha(x-x'))}
+{\partial x_j}
+d\alpha
+$$
+
+Here:
+
+- $F$ represents the classification model.
+- $x$ represents the actual input.
+- $x'$ represents the baseline input.
+- $\alpha$ interpolates between the baseline and the actual input.
+
+The resulting attribution indicates the contribution of each feature to the model output relative to the selected baseline.
+
+**Segment-level Integrated Gradients (SIG)**
+
+InteDisUX extends IG to calculate importance scores for groups of consecutive time points.
+
+Instead of considering each time point independently, the method aggregates the IG scores belonging to a segment:
+
+$$
+SIG(s)=
+\sum_{t=t_{\mathrm{low}}}^{t_{\mathrm{high}}}
+IG_t(x)
+$$
+
+Here, $t_{\mathrm{low}}$ and $t_{\mathrm{high}}$ define the boundaries of the segment.
+
+Consequently, the importance of a segment is obtained by summing the attribution scores of its constituent time points.
+
+The resulting scores provide an initial importance-based representation of the time series.
+
+### 2.1.2. Stage 2: Iterative Refinement
+
+After initialization, InteDisUX attempts to improve the segmentation by merging consecutive segments.
+
+For a segmentation containing $n$ segments, the algorithm generates $n-1$ possible candidate segmentations by considering the merging of each consecutive pair.
+
+For example, given:
+
+$$
+S=\\{s_1,s_2,s_3,s_4\\}
+$$
+
+the candidate segmentations are:
+
+$$
+\\{s_1\cup s_2,s_3,s_4\\}
+$$
+
+$$
+\\{s_1,s_2\cup s_3,s_4\\}
+$$
+
+$$
+\\{s_1,s_2,s_3\cup s_4\\}
+$$
+
+Each candidate is evaluated using Discrimination Gain and Faithfulness Gain.
+
+**A. Discrimination Gain**
+
+Discrimination Gain measures the change in the average distance between consecutive segments following a merge.
+
+The underlying idea is that segments should capture distinct temporal patterns.
+
+If two consecutive segments are merged, their relationship with their neighboring segments changes. The method evaluates whether this merge improves the distinction between neighboring segments.
+
+The paper employs Hausdorff distance to measure the distance between segments.
+
+The discrimination gain is calculated as the difference between the average distance after merging and the average distance before merging.
+
+For the three-segment example illustrated in Figure 2 (page 4):
+
+![Discrimination gain calculation process](res/Discrimination_gain_calculation_process.png)
+
+$$
+DG =
+\frac{1}{2}
+[d(0,12)+d(12,3)]-
+\frac{1}{3}
+[d(0,1)+d(1,2)+d(2,3)]
+$$
+
+Here, the notation represents the segments before and after merging, and $d$ denotes the distance function.
+
+A positive discrimination gain indicates that the merge increases the average distance between consecutive segments.
+
+**B. Faithfulness Gain**
+
+Faithfulness Gain measures whether merging two segments improves the faithfulness of the explanation.
+
+The authors calculate faithfulness by evaluating how much the model's confidence in the ground-truth class decreases when the most important segment is reversed.
+
+The procedure is:
+
+1. Feed the original time series into the classification model.
+2. Identify the most important segment according to the current explanation.
+3. Construct a partially reversed version of the time series by reversing that segment.
+4. Feed the modified time series into the model.
+5. Measure the reduction in the ground-truth class confidence.
+
+The faithfulness score can be expressed conceptually as:
+
+$$
+Faithfulness(S)=
+F_y(x)-F_y(x_{\mathrm{reversed}})
+$$
+
+where:
+
+- $F_y(x)$ is the model confidence for the ground-truth class on the original input.
+- $F_y(x_{\mathrm{reversed}})$ is the confidence after reversing the selected segment.
+
+Faithfulness Gain measures the improvement in this score resulting from a candidate merge. The following figure illustrates this evaluation procedure:
+
+![Faithfulness score calculation process](res/Faithfulness_score_calculation_process.png)
+
+**C. Greedy Selection**
+
+After calculating both gains for the candidate segmentations, InteDisUX selects a better segmentation using a greedy strategy.
+
+The selection procedure follows these principles:
+
+- Candidate merges must have non-negative Discrimination Gain.
+- Candidate merges must have non-negative Faithfulness Gain.
+- Among the eligible candidates, the method selects the one with the highest Discrimination Gain.
+
+The selected segmentation becomes the new baseline for the next iteration.
+
+This process continues until no suitable candidate merge remains.
+
+Consequently, the number of segments in the final explanation is determined by the iterative refinement process rather than being fixed beforehand.
 
 ## 2.2. My interpretation 
 
@@ -112,4 +308,4 @@ Discuss the paper in relation to the results in the paper and your results.
 # Contact
 
 - Ferayenur Bozkurt - e279098@metu.edu.tr
-- Efe Kaan Fidancı -
+- Efe Kaan Fidancı - e278620@metu.edu.tr
