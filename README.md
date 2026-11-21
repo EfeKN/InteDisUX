@@ -116,3 +116,8 @@ Discuss the paper in relation to the results in the paper and your results.
 [10] F. Karim, S. Majumdar, H. Darabi, and S. Chen, "LSTM Fully Convolutional Networks for Time Series Classification," *IEEE Access*, vol. 6, pp. 1662–1669, 2018.
 
 [11] H. A. Dau, A. Bagnall, K. Kamgar, C.-C. M. Yeh, Y. Zhu, S. Gharghabi, C. A. Ratanamahatana, and E. Keogh, "The UCR Time Series Archive," *IEEE/CAA Journal of Automatica Sinica*, vol. 6, no. 6, pp. 1293–1305, 2019. https://www.cs.ucr.edu/~eamonn/time_series_data_2018/
+
+# Contact
+
+Ferayenur Bozkurt - e279098@metu.edu.tr
+Efe Kaan Fidancı - 
