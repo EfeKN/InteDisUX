@@ -334,13 +334,13 @@ $$
 SIG(s)=\sum_{t=t_{\mathrm{low}}}^{t_{\mathrm{high}}}IG_t(x)
 $$
 
-When two segments are merged, their importance scores can simply be added:
 
-$$
-SIG(s_i\cup s_{i+1})
-=
-SIG(s_i)+SIG(s_{i+1})
-$$
+When two adjacent segments are merged, their importance scores can simply be added:
+
+```math
+SIG(s_i \cup s_{i+1}) = SIG(s_i) + SIG(s_{i+1})
+```
+
 
 This follows from the additive property of Integrated Gradients.
 
