@@ -1,5 +1,5 @@
 # InteDisUX: Interpretation-Guided Discriminative User-Centric Explanation for Time Series
-This readme file is an outcome of the [CENG7880 (Fall 2026)](https://metu-trai.github.io/) project for reproducing a paper which does not have an implementation. See [CENG7880 (Spring 2026) Project List](https://github.com/metu-trai/Projects2026) for a complete list of all paper reproduction projects.
+This readme file is an outcome of the [CENG7880 (Fall 2026)](https://metu-trai.github.io/) project for reproducing a paper which does not have an implementation. See [CENG7880 (Fall 2026) Project List](https://github.com/metu-trai/Projects2026) for a complete list of all paper reproduction projects.
 
 # 1. Introduction
 
@@ -26,31 +26,31 @@ In this way, both the number and the locations of the segments are adapted to ea
 
 ### 1.1.2. Datasets
 
-All 12 datasets are univariate binary classification datasets from the UCR Time Series Archive [11]. They are the same datasets that were used in the LIMESegment [2] paper.
+All 12 datasets are univariate binary classification datasets from the UCR Time Series Archive [7]. They are the same datasets that were used in the LIMESegment [2] paper.
 
-**[Coffee](https://www.timeseriesclassification.com/description.php?Dataset=Coffee)** [11]: Contains 56 food spectrograph samples (28 train, 28 test) of length 286. The task is to distinguish Arabica from Robusta coffee beans.
+**[Coffee](https://www.timeseriesclassification.com/description.php?Dataset=Coffee)** [7]: Contains 56 food spectrograph samples (28 train, 28 test) of length 286. The task is to distinguish Arabica from Robusta coffee beans.
 
-**[Strawberry](https://www.timeseriesclassification.com/description.php?Dataset=Strawberry)** [11]: Contains 983 infrared spectra (613 train, 370 test) of length 235 of fruit purees. The task is to classify purees as strawberry or non-strawberry (adulterated).
+**[Strawberry](https://www.timeseriesclassification.com/description.php?Dataset=Strawberry)** [7]: Contains 983 infrared spectra (613 train, 370 test) of length 235 of fruit purees. The task is to classify purees as strawberry or non-strawberry (adulterated).
 
-**[GunPointOldVersusYoung (GPAge)](https://www.timeseriesclassification.com/description.php?Dataset=GunPointOldVersusYoung)** [11]: Contains 451 samples (136 train, 315 test) of length 150. Each series is the x-coordinate of an actor's hand while drawing a replica gun from a holster. The task is to classify the actor as young or old.
+**[GunPointOldVersusYoung (GPAge)](https://www.timeseriesclassification.com/description.php?Dataset=GunPointOldVersusYoung)** [7]: Contains 451 samples (136 train, 315 test) of length 150. Each series is the x-coordinate of an actor's hand while drawing a replica gun from a holster. The task is to classify the actor as young or old.
 
-**[GunPointMaleVersusFemale (GPGender)](https://www.timeseriesclassification.com/description.php?Dataset=GunPointMaleVersusFemale)** [11]: Contains 451 samples (135 train, 316 test) of length 150. It uses the same gun-drawing recordings as GPAge, and the task is to classify the actor's gender.
+**[GunPointMaleVersusFemale (GPGender)](https://www.timeseriesclassification.com/description.php?Dataset=GunPointMaleVersusFemale)** [7]: Contains 451 samples (135 train, 316 test) of length 150. It uses the same gun-drawing recordings as GPAge, and the task is to classify the actor's gender.
 
-**[HandOutlines (Hand)](https://www.timeseriesclassification.com/description.php?Dataset=HandOutlines)** [11]: Contains 1,370 samples (1,000 train, 370 test) of length 2,709. The outline of a hand, extracted from an X-ray image, is converted into a one-dimensional series.
+**[HandOutlines (Hand)](https://www.timeseriesclassification.com/description.php?Dataset=HandOutlines)** [7]: Contains 1,370 samples (1,000 train, 370 test) of length 2,709. The outline of a hand, extracted from an X-ray image, is converted into a one-dimensional series.
 
-**[Yoga](https://www.timeseriesclassification.com/description.php?Dataset=Yoga)** [11]: Contains 3,300 samples (300 train, 3,000 test) of length 426. The outline of an actor performing yoga poses is converted into a one-dimensional series, and the task is to classify the actor (male or female).
+**[Yoga](https://www.timeseriesclassification.com/description.php?Dataset=Yoga)** [7]: Contains 3,300 samples (300 train, 3,000 test) of length 426. The outline of an actor performing yoga poses is converted into a one-dimensional series, and the task is to classify the actor (male or female).
 
-**[ECG200 (ECG)](https://www.timeseriesclassification.com/description.php?Dataset=ECG200)** [11]: Contains 200 samples (100 train, 100 test) of length 96. Each series records the electrical activity of a single heartbeat, and the task is to distinguish normal heartbeats from myocardial infarction.
+**[ECG200 (ECG)](https://www.timeseriesclassification.com/description.php?Dataset=ECG200)** [7]: Contains 200 samples (100 train, 100 test) of length 96. Each series records the electrical activity of a single heartbeat, and the task is to distinguish normal heartbeats from myocardial infarction.
 
-**[DodgerLoopGame (Dodger)](https://www.timeseriesclassification.com/description.php?Dataset=DodgerLoopGame)** [11]: Contains 158 samples (20 train, 138 test) of length 288. Each series is one day of traffic counts from a loop sensor near Dodger Stadium (Los Angeles), aggregated every 5 minutes. The task is to classify each day as a game day or a normal day.
+**[DodgerLoopGame (Dodger)](https://www.timeseriesclassification.com/description.php?Dataset=DodgerLoopGame)** [7]: Contains 158 samples (20 train, 138 test) of length 288. Each series is one day of traffic counts from a loop sensor near Dodger Stadium (Los Angeles), aggregated every 5 minutes. The task is to classify each day as a game day or a normal day.
 
-**[Chinatown](https://www.timeseriesclassification.com/description.php?Dataset=Chinatown)** [11]: Contains 363 samples (20 train, 343 test) of length 24. Each series is one day of hourly pedestrian counts from an automated counting system in Melbourne's Chinatown. The task is to classify each day as a weekday or a weekend day.
+**[Chinatown](https://www.timeseriesclassification.com/description.php?Dataset=Chinatown)** [7]: Contains 363 samples (20 train, 343 test) of length 24. Each series is one day of hourly pedestrian counts from an automated counting system in Melbourne's Chinatown. The task is to classify each day as a weekday or a weekend day.
 
-**[FreezerSmallTrain (Freezer)](https://www.timeseriesclassification.com/description.php?Dataset=FreezerSmallTrain)** [11]: Contains 2,878 samples (28 train, 2,850 test) of length 301. Each series is the power demand of a freezer, and the task is to classify the freezer's location (kitchen or garage).
+**[FreezerSmallTrain (Freezer)](https://www.timeseriesclassification.com/description.php?Dataset=FreezerSmallTrain)** [7]: Contains 2,878 samples (28 train, 2,850 test) of length 301. Each series is the power demand of a freezer, and the task is to classify the freezer's location (kitchen or garage).
 
-**[HouseTwenty (House20)](https://www.timeseriesclassification.com/description.php?Dataset=HouseTwenty)** [11]: Contains 159 samples (40 train, 119 test) of length 2,000. Each series is an electricity consumption profile of a single house, and there are two classes of load profiles.
+**[HouseTwenty (House20)](https://www.timeseriesclassification.com/description.php?Dataset=HouseTwenty)** [7]: Contains 159 samples (40 train, 119 test) of length 2,000. Each series is an electricity consumption profile of a single house, and there are two classes of load profiles.
 
-**[WormsTwoClass (Worms)](https://www.timeseriesclassification.com/description.php?Dataset=WormsTwoClass)** [11]: Contains 258 samples (181 train, 77 test) of length 900. Each series describes the motion of a *C. elegans* worm, and the task is to distinguish wild-type worms from mutants.
+**[WormsTwoClass (Worms)](https://www.timeseriesclassification.com/description.php?Dataset=WormsTwoClass)** [7]: Contains 258 samples (181 train, 77 test) of length 900. Each series describes the motion of a *C. elegans* worm, and the task is to distinguish wild-type worms from mutants.
 
 ### 1.1.3. Findings and Conclusion of the Paper
 
@@ -107,17 +107,9 @@ Discuss the paper in relation to the results in the paper and your results.
 
 [6] M. T. Ribeiro, S. Singh, and C. Guestrin, "'Why Should I Trust You?': Explaining the Predictions of Any Classifier," in *Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD)*, pp. 1135–1144, 2016.
 
-[7] D. P. Huttenlocher, G. A. Klanderman, and W. J. Rucklidge, "Comparing Images Using the Hausdorff Distance," *IEEE Transactions on Pattern Analysis and Machine Intelligence*, vol. 15, no. 9, pp. 850–863, 1993.
-
-[8] Z. Tan, Y. Tian, and J. Li, "GLIME: General, Stable and Local LIME Explanation," in *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 36, 2023.
-
-[9] Z. Wang, W. Yan, and T. Oates, "Time Series Classification from Scratch with Deep Neural Networks: A Strong Baseline," in *International Joint Conference on Neural Networks (IJCNN)*, pp. 1578–1585, 2017.
-
-[10] F. Karim, S. Majumdar, H. Darabi, and S. Chen, "LSTM Fully Convolutional Networks for Time Series Classification," *IEEE Access*, vol. 6, pp. 1662–1669, 2018.
-
-[11] H. A. Dau, A. Bagnall, K. Kamgar, C.-C. M. Yeh, Y. Zhu, S. Gharghabi, C. A. Ratanamahatana, and E. Keogh, "The UCR Time Series Archive," *IEEE/CAA Journal of Automatica Sinica*, vol. 6, no. 6, pp. 1293–1305, 2019. https://www.cs.ucr.edu/~eamonn/time_series_data_2018/
+[7] H. A. Dau, A. Bagnall, K. Kamgar, C.-C. M. Yeh, Y. Zhu, S. Gharghabi, C. A. Ratanamahatana, and E. Keogh, "The UCR Time Series Archive," *IEEE/CAA Journal of Automatica Sinica*, vol. 6, no. 6, pp. 1293–1305, 2019. https://www.cs.ucr.edu/~eamonn/time_series_data_2018/
 
 # Contact
 
-Ferayenur Bozkurt - e279098@metu.edu.tr
-Efe Kaan Fidancı - 
+- Ferayenur Bozkurt - e279098@metu.edu.tr
+- Efe Kaan Fidancı -
